@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Luxury 审美基因测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        body {
+            background-color: #141416;
+            color: #C9C7C1;
+            min-height: 100vh;
+            padding: 24px 16px;
+            background-image: radial-gradient(rgba(212,175,106,0.06) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        /* 密码页样式 */
+        .pwd-wrap{
+            min-height:90vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+        }
+        .main-title{
+            font-size:36px;
+            color:#D4AF6A;
+            font-weight:500;
+            text-align:center;
+            margin-bottom:12px;
+        }
+        .sub-title{
+            font-size:17px;
+            color:#C9C7C1;
+            text-align:center;
+            margin-bottom:48px;
+        }
+        .glass-card{
+            width:100%;
+            background:rgba(30,30,34,0.75);
+            border-radius:28px;
+            padding:32px 24px;
+            backdrop-filter: blur(8px);
+            border:1px solid rgba(212,175,106,0.15);
+        }
+        .input-box{
+            width:100%;
+            background:#1E1E22;
+            border:1px solid #D4AF6A;
+            border-radius:16px;
+            padding:16px 20px;
+            color:#fff;
+            font-size:16px;
+            outline:none;
+            margin-bottom:24px;
+        }
+        .gold-btn{
+            width:100%;
+            padding:16px;
+            border-radius:16px;
+            border:none;
+            background: linear-gradient(135deg,#D4AF6A,#c29b4e);
+            color:#141416;
+            font-size:17px;
+            font-weight:600;
+            cursor:pointer;
+            transition: 0.25s ease;
+        }
+        .gold-btn:hover{
+            opacity:0.9;
+        }
+        .tip-text{
+            text-align:center;
+            margin-top:16px;
+            font-size:13px;
+            color:#888681;
+        }
+
+        /* 答题页面 */
+        .progress-wrap{
+            margin-bottom:32px;
+        }
+        .progress-bar-bg{
+            width:100%;
+            height:4px;
+            background:#2c2c30;
+            border-radius:99px;
+        }
+        .progress-bar-fill{
+            height:4px;
+            background:#D4AF6A;
+            border-radius:99px;
+            transition:0.3s;
+        }
+        .progress-text{
+            display:flex;
+            justify-content:space-between;
+            margin-top:8px;
+            font-size:14px;
+            color:#888681;
+        }
+        .q-text{
+            font-size:19px;
+            line-height:1.6;
+            margin-bottom:28px;
+            color:#eee;
+        }
+        .option-item{
+            border:1px solid rgba(212,175,106,0.35);
+            border-radius:16px;
+            padding:18px 20px;
+            margin-bottom:14px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            gap:16px;
+            transition:0.25s;
+        }
+        .option-item:hover{
+            border-color:#D4AF6A;
+            background:rgba(212,175,106,0.08);
+        }
+        .option-item.selected{
+            border-color:#D4AF6A;
+            background:rgba(212,175,106,0.14);
+            box-shadow:0 0 12px rgba(212,175,106,0.25);
+        }
+        .opt-letter{
+            width:36px;
+            height:36px;
+            border-radius:50%;
+            background:rgba(212,175,106,0.22);
+            color:#D4AF6A;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:bold;
+            flex-shrink:0;
+        }
+        .opt-desc{
+            line-height:1.5;
+        }
+        .next-btn{
+            margin-top:24px;
+        }
+        .next-btn:disabled{
+            background:#444;
+            color:#999;
+            cursor:not-allowed;
+        }
+
+        /* 结果报告页 */
+        #result-card{
+            background:rgba(30,30,34,0.8);
+            border-radius:28px;
+            padding:28px 22px;
+            border:1px solid rgba(212,175,106,0.18);
+        }
+        .result-header{
+            background:linear-gradient(135deg,#D4AF6A,#e2c388);
+            color:#141416;
+            padding:16px;
+            border-radius:20px;
+            text-align:center;
+            margin-bottom:26px;
+        }
+        .result-header h2{
+            font-size:24px;
+            margin-bottom:6px;
+        }
+        .result-slogan{
+            font-size:15px;
+        }
+        .trait-row{
+            margin-bottom:18px;
+        }
+        .trait-top{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:6px;
+        }
+        .trait-name{
+            font-size:16px;
+        }
+        .trait-percent{
+            color:#D4AF6A;
+            font-weight:500;
+        }
+        .bar-bg{
+            width:100%;
+            height:6px;
+            background:#2c2c30;
+            border-radius:99px;
+        }
+        .bar-fill{
+            height:6px;
+            background:#D4AF6A;
+            border-radius:99px;
+            transition:0.6s ease;
+        }
+        .person-desc{
+            margin:26px 0;
+            line-height:1.7;
+            color:#C9C7C1;
+            text-align:center;
+        }
+        .recommend-block{
+            margin:20px 0;
+            padding:16px;
+            border:1px solid rgba(212,175,106,0.16);
+            border-radius:16px;
+        }
+        .recommend-title{
+            color:#D4AF6A;
+            font-weight:bold;
+            margin-bottom:8px;
+            font-size:17px;
+        }
+        .recommend-item-name{
+            color:#fff;
+            margin-bottom:4px;
+        }
+        .recommend-item-desc{
+            font-size:14px;
+            line-height:1.6;
+            color:#C9C7C1;
+        }
+        .warning-text{
+            margin-top:20px;
+            font-size:13px;
+            color:#888681;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 密码页面 -->
+    <div id="page-pwd" class="page active">
+        <div class="pwd-wrap">
+            <h1 class="main-title">Luxury 审美基因测试</h1>
+            <p class="sub-title">探寻你与生俱来的奢侈品审美内核</p>
+            <div class="glass-card">
+                <input class="input-box" id="pwdInput" placeholder="输入解锁密码">
+                <button class="gold-btn" onclick="checkPassword()">进入测试</button>
+            </div>
+            <p class="tip-text">趣味审美测试 · 仅供娱乐</p>
+        </div>
+    </div>
+
+    <!-- 答题页面 -->
+    <div id="page-quiz" class="page">
+        <div class="progress-wrap">
+            <div class="progress-bar-bg">
+                <div id="progressFill" class="progress-bar-fill" style="width:0%"></div>
+            </div>
+            <div class="progress-text">
+                <span id="qNum">1/10</span>
+            </div>
+        </div>
+        <div class="q-text" id="questionText"></div>
+        <div id="optionWrap"></div>
+        <button id="nextBtn" class="gold-btn next-btn" disabled onclick="goNext()">下一题</button>
+    </div>
+
+    <!-- 结果报告页 -->
+    <div id="page-result" class="page">
+        <div id="result-card">
+            <div class="result-header">
+                <h2>你的审美基因</h2>
+                <div id="geneSlogan" class="result-slogan"></div>
+            </div>
+            <div id="traitWrap"></div>
+            <div id="personDesc" class="person-desc"></div>
+            <div id="recommendWrap"></div>
+            <div class="warning-text">趣味审美测试，仅供娱乐参考</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 基础配置
+const PASSWORD = "9999";
+let currentQuestion = 0;
+// 6大审美特质
+let traitScores = {
+    restrained: 0,     // 克制内敛
+    orderly: 0,        // 利落秩序
+    romantic: 0,       // 浪漫丰盈
+    avantgarde: 0,     // 先锋思辨
+    sculptural: 0,     // 雕塑浓烈
+    laidback: 0        // 松弛贵感
+};
+const traitMeta = [
+    {key:"restrained", name:"克制内敛"},
+    {key:"orderly", name:"利落秩序"},
+    {key:"romantic", name:"浪漫丰盈"},
+    {key:"avantgarde", name:"先锋思辨"},
+    {key:"sculptural", name:"雕塑浓烈"},
+    {key:"laidback", name:"松弛贵感"}
+];
+
+// 单品库，每个特质下多件商品，随机抽取
+const itemPool = {
+    restrained:{
+        slogan:"恒久工艺型｜你的审美，忠于材质与时间",
+        desc:"你偏爱低调材质、恒久工艺与克制比例。你不会被潮流符号裹挟，更看重器物本身的质感与长久生命力，审美沉稳有定力。",
+        bag:[
+            {name:"Hermès Birkin 25 锡器灰",desc:"低调无夸张logo，扎实牛皮随使用产生温润包浆，不追逐短期潮流，契合你偏爱长久陪伴、内敛有底蕴的审美。"},
+            {name:"Hermès Kelly 28 大象灰",desc:"线条克制沉稳，皮革质感出众，经典永不过时，不张扬，适合追求恒久质感的审美。"}
+        ],
+        jewel:[
+            {name:"Chaumet尚美巴黎 缘系·一生项链",desc:"线条简约克制，没有繁复堆砌，寓意隽永，质感细腻，安静释放贵气，适配沉稳内敛的气质。"},
+            {name:"Tiffany 经典六爪钻石耳钉",desc:"设计极简，将焦点留给宝石本身，没有多余雕花，安静内敛，经典传世。"}
+        ],
+        watch:[
+            {name:"百达翡丽 Calatrava 卡拉卓华系列",desc:"腕表界经典正装款，极简圆形表盘，不张扬，经得起岁月沉淀，属于越看越有味道的传世款式。"},
+            {name:"江诗丹顿 传袭系列正装腕表",desc:"超薄简约表盘，去掉多余装饰，工艺细腻，低调隽永。"}
+        ],
+        perfume:[
+            {name:"Roja 罗嘉 琥珀乌木",desc:"厚重温润的乌木琥珀调，高级内敛，没有甜腻感，留香绵长，是低调有分量的木质香。"},
+            {name:"Creed 皇家沉香",desc:"沉稳醇厚沉香，温润内敛，不张扬，成熟厚重，适合偏爱恒久质感的人。"}
+        ]
+    },
+    orderly:{
+        slogan:"秩序几何型｜理性克制，线条即是力量",
+        desc:"你欣赏严谨的比例与干净几何结构，摒弃多余装饰。审美冷静自持，追求平衡秩序，喜欢不动声色的庄重贵气。",
+        bag:[
+            {name:"Celine Classic Box 黑色",desc:"利落方正几何轮廓，极简硬挺版型，去掉多余装饰，依靠线条本身塑造美感，适配理性克制的审美。"},
+            {name:"Celine Triomphe 中号老花",desc:"凯旋门锁扣几何造型，轮廓工整干净，秩序感强，简约大气。"}
+        ],
+        jewel:[
+            {name:"Cartier卡地亚 Love系列手镯",desc:"经典螺丝几何设计，简约有力，没有多余雕花，冷静庄重，完美契合你偏爱秩序感的审美。"},
+            {name:"Cartier 钉子系列项链",desc:"直线几何造型，利落干脆，线条感强，理性高级。"}
+        ],
+        watch:[
+            {name:"劳力士 Datejust 日志型",desc:"表盘规整平衡，设计经久不衰，硬朗利落，兼具稳重与实用性，简约不浮夸。"},
+            {name:"IWC 葡萄牙系列",desc:"简洁大表盘，比例均衡，理性优雅，结构干净利落。"}
+        ],
+        perfume:[
+            {name:"Tom Ford 乌木沉香",desc:"干净厚重的木质调，克制沉稳，没有过多甜香，冷静高级，适合理性内敛的气质。"},
+            {name:"Acqua di Parma 帕尔玛之水 克罗尼亚",desc:"干净利落柑橘木质调，清爽规整，简约克制。"}
+        ]
+    },
+    romantic:{
+        slogan:"浪漫叙事型｜美学是情绪与诗意的表达",
+        desc:"你的审美充满故事感，偏爱柔美的曲线与氛围感。你相信美可以传递情绪，欣赏浪漫丰盈、富有仪式感的设计。",
+        bag:[
+            {name:"Dior Lady Dior 戴妃包 哑光灰",desc:"经典藤格纹，优雅柔和的轮廓，自带复古故事感，浪漫端庄，适配你富有诗意的审美。"},
+            {name:"Dior 戴妃包 缎面浅粉",desc:"柔和轮廓，复古藤格纹，柔美浪漫，自带优雅故事氛围感。"}
+        ],
+        jewel:[
+            {name:"Dior Rose 玫瑰系列项链",desc:"立体玫瑰曲线，柔美灵动，把浪漫意象融入珠宝，温柔富有叙事感，适配浪漫气质。"},
+            {name:"Van Cleef & Arpels 四叶草项链",desc:"柔和曲线，优雅诗意，自带浪漫故事感，柔美灵动。"}
+        ],
+        watch:[
+            {name:"江诗丹顿 Patrimony 传袭系列",desc:"超薄优雅表盘，柔和线条，自带古典浪漫氛围感，精致细腻，充满诗意。"},
+            {name:"宝玑 经典系列女表",desc:"弧形表盘，古典雕花，浪漫优雅，充满复古诗意。"}
+        ],
+        perfume:[
+            {name:"Guerlain娇兰 花草水语·柑橘罗勒",desc:"明媚温柔的花果香，浪漫轻盈，自带故事氛围感，优雅又富有灵气。"},
+            {name:"Dior 玫瑰之约",desc:"清甜柔美的玫瑰香，浪漫细腻，氛围感极强。"}
+        ]
+    },
+    avantgarde:{
+        slogan:"思辨先锋型｜小众独立，拒绝大众化审美",
+        desc:"你拥有知识分子式审美，喜欢带有概念感、反叛传统的设计。不盲从大众爆款，追求设计背后的思想。",
+        bag:[
+            {name:"Prada Re-Nylon 再生尼龙托特包",desc:"先锋材质打破传统奢侈品认知，极简克制，充满思辨感，拒绝烂大街的爆款。"},
+            {name:"Balenciaga Hourglass 沙漏包",desc:"先锋曲线解构造型，打破传统包袋范式，辨识度高，小众前卫。"}
+        ],
+        jewel:[
+            {name:"Boucheron宝诗龙 Quatre系列戒指",desc:"多层环带解构设计，打破传统珠宝范式，前卫有思想，小众不撞款。"},
+            {name:"Messika 移动钻石项链",desc:"动态解构设计，充满先锋巧思，独特不随大流。"}
+        ],
+        watch:[
+            {name:"爱彼 Royal Oak 皇家橡树系列",desc:"八角形先锋设计，颠覆传统腕表美学，充满反叛力量，辨识度极强。"},
+            {name:"宇舶 经典融合系列",desc:"材质混搭先锋设计，打破传统腕表审美，前卫独特。"}
+        ],
+        perfume:[
+            {name:"Le Labo 33号檀香",desc:"先锋木质香，冷静疏离，带着知识分子清冷感，小众独特，拒绝甜腻大众香。"},
+            {name:"Byredo 无人区玫瑰",desc:"清冷疏离花香，概念感强，小众先锋，不迎合大众甜香。"}
+        ]
+    },
+    sculptural:{
+        slogan:"雕塑浓烈型｜热烈明艳，造型即是艺术",
+        desc:"欣赏雕塑感立体造型，浓烈华丽。偏爱有记忆点的设计，喜欢曲线带来的热烈戏剧美感。",
+        bag:[
+            {name:"Dior Saddle 马鞍包",desc:"雕塑感曲线造型，大胆复古，艺术感极强，热烈明艳，一眼就能记住。"},
+            {name:"Gucci Jackie 1961",desc:"流畅雕塑弧形轮廓，复古浓烈，自带戏剧艺术感。"}
+        ],
+        jewel:[
+            {name:"Bvlgari 蛇形Serpenti项链",desc:"雕塑感灵蛇曲线，立体华丽，艺术感十足，浓烈明艳，自带强大魅力。"},
+            {name:"Chopard 动物系列珠宝",desc:"立体雕塑造型，华丽饱满，艺术表现力强烈。"}
+        ],
+        watch:[
+            {name:"宝格丽 Serpenti 蛇形腕表",desc:"把珠宝雕塑融入腕表，曲线灵动，艺术感拉满，浓烈华丽。"},
+            {name:"Chopard 快乐钻石女表",desc:"立体流动设计，华丽戏剧，视觉冲击力强。"}
+        ],
+        perfume:[
+            {name:"Guerlain 娇兰 一千零一夜",desc:"浓郁华丽东方香，浓烈浪漫，充满艺术戏剧感，明艳动人。"},
+            {name:"Tom Ford 午夜兰花",desc:"浓郁华丽馥郁花香，戏剧感强烈，浓烈富有艺术张力。"}
+        ]
+    },
+    laidback:{
+        slogan:"松弛老钱型｜看不见的高级，质感优先",
+        desc:"追求松弛奢华，弱化logo，看重面料触感。偏爱舒适自在，低调内敛，是安静不张扬的高级。",
+        bag:[
+            {name:"Goyard Saigon 西贡包 黑色",desc:"低调暗纹，无醒目大logo，质感上乘，松弛随性，老钱风低调奢华，不刻意炫耀。"},
+            {name:"Loro Piana Extra Pocket 小皮包",desc:"完全无logo，顶级皮革，松弛随性，低调奢华。"}
+        ],
+        jewel:[
+            {name:"Harry Winston 经典钻石耳钉",desc:"钻石纯粹闪耀，设计极简，不花哨，安静释放顶级质感，低调奢华。"},
+            {name:"Mikimoto 珍珠耳钉",desc:"温润珍珠，极简设计，无夸张装饰，松弛贵气。"}
+        ],
+        watch:[
+            {name:"朗格 Saxonia 萨克森系列",desc:"德系极简正装腕表，内敛精致，没有夸张装饰，温润高级，低调有分量。"},
+            {name:"宝珀 五十噚基础款",desc:"简约硬朗，无浮夸装饰，质感扎实，低调松弛。"}
+        ],
+        perfume:[
+            {name:"Creed 银色山泉",desc:"清冷干净的山泉木质调，松弛优雅，没有浓烈侵略感，是老钱风低调香。"},
+            {name:"Diptyque 谭道",desc:"温润沉静木质香，松弛柔和，安静不张扬。"}
+        ]
+    }
+};
+
+const questions = [
+    {
+        q:"你理解的高级之美，更接近？",
+        o:[
+            {letter:"A", text:"历经时间沉淀，工艺为本，含蓄内敛，不向外宣告身份", score:{restrained:2, laidback:1}},
+            {letter:"B", text:"结构与线条的理性秩序，克制精简，去掉一切冗余装饰", score:{orderly:2}},
+            {letter:"C", text:"充满叙事感，浪漫丰盈，自带故事与氛围感", score:{romantic:2}},
+            {letter:"D", text:"带着思辨感，打破固有审美定式，拥有知识分子式的冷感", score:{avantgarde:2}}
+        ]
+    },
+    {
+        q:"一件珍品最打动你的核心是？",
+        o:[
+            {letter:"A", text:"材质本身的肌理、手工温度，经得起长久使用磨损", score:{restrained:2, laidback:1}},
+            {letter:"B", text:"利落的几何轮廓，比例的平衡，视觉秩序感", score:{orderly:2}},
+            {letter:"C", text:"流动的曲线、光影，富有情绪张力", score:{romantic:2, sculptural:1}},
+            {letter:"D", text:"概念与巧思，带着反叛，不迎合大众审美", score:{avantgarde:2}}
+        ]
+    },
+    {
+        q:"面对饰品上的装饰，你的态度是？",
+        o:[
+            {letter:"A", text:"装饰可有可无，品质优先，经典大于花哨细节", score:{restrained:2, laidback:1}},
+            {letter:"B", text:"尽量剥离多余装饰，依靠版型本身塑造美感", score:{orderly:2}},
+            {letter:"C", text:"适度精致纹样，花卉、复古雕花，增添浪漫叙事", score:{romantic:2}},
+            {letter:"D", text:"装饰可以冲突、解构，允许矛盾感，拒绝平庸", score:{avantgarde:2, sculptural:1}}
+        ]
+    },
+    {
+        q:"你更认同哪一种美学逻辑？",
+        o:[
+            {letter:"A", text:"美是恒久的，跨越流行，能传承多年", score:{restrained:2}},
+            {letter:"B", text:"美是严谨的，依靠比例、对称、结构构建", score:{orderly:2}},
+            {letter:"C", text:"美是感性的，用来释放情绪，营造氛围感", score:{romantic:2}},
+            {letter:"D", text:"美是思辨的，挑战固有认知，小众而独特", score:{avantgarde:2}}
+        ]
+    },
+    {
+        q:"挑选随身配饰，你优先看重？",
+        o:[
+            {letter:"A", text:"低调无夸张logo，材质上乘，日常也可承载", score:{laidback:2, restrained:1}},
+            {letter:"B", text:"简洁几何造型，冷感贵金属，线条干净利落", score:{orderly:2}},
+            {letter:"C", text:"柔和曲线，宝石、花卉元素，自带温柔诗意", score:{romantic:2}},
+            {letter:"D", text:"造型独特，带有先锋设计，一眼辨识度", score:{sculptural:2, avantgarde:1}}
+        ]
+    },
+    {
+        q:"关于流行趋势，你的选择倾向？",
+        o:[
+            {letter:"A", text:"不为潮流而动，只选择可以长期陪伴自己的单品", score:{restrained:2, laidback:1}},
+            {letter:"B", text:"取其结构精华，剥离花哨营销，保留理性美感", score:{orderly:2}},
+            {letter:"C", text:"接纳浪漫化的季节流行，喜欢氛围感的变化", score:{romantic:2}},
+            {letter:"D", text:"偏爱反潮流设计，大众追捧的款式会刻意避开", score:{avantgarde:2}}
+        ]
+    },
+    {
+        q:"当一件设计作品带有冲突感，你的感受？",
+        o:[
+            {letter:"A", text:"排斥，偏爱和谐沉稳，没有强烈冲突的美感", score:{restrained:2, laidback:1}},
+            {letter:"B", text:"若冲突破坏结构平衡，则难以接受", score:{orderly:2}},
+            {letter:"C", text:"适度冲突能增加故事感，但不能过于割裂", score:{romantic:2}},
+            {letter:"D", text:"很有吸引力，矛盾本身就是美学的一部分", score:{avantgarde:2, sculptural:1}}
+        ]
+    },
+    {
+        q:"你更偏爱哪种材质传递的气质？",
+        o:[
+            {letter:"A", text:"厚实皮革，温润细腻，随时间产生自然包浆", score:{laidback:2, restrained:1}},
+            {letter:"B", text:"冷感贵金属，轮廓分明，干净平整", score:{orderly:2}},
+            {letter:"C", text:"水晶、珍珠，柔和通透，自带柔和光影", score:{romantic:2}},
+            {letter:"D", text:"特殊复合材质，带着工业先锋质感", score:{avantgarde:2, sculptural:1}}
+        ]
+    },
+    {
+        q:"选择奢侈品，对你而言是？",
+        o:[
+            {letter:"A", text:"忠于自我，舒适自在，彰显内在底蕴而非标签", score:{laidback:2, restrained:1}},
+            {letter:"B", text:"塑造冷静自持的外在秩序，克制而有力量", score:{orderly:2}},
+            {letter:"C", text:"表达情绪，营造氛围感，传递浪漫气质", score:{romantic:2}},
+            {letter:"D", text:"表达独立思想，区别于大众，彰显独特认知", score:{avantgarde:2}}
+        ]
+    },
+    {
+        q:"如果用一句话定义你的审美底色？",
+        o:[
+            {letter:"A", text:"恒久隽永，工艺大于噱头", score:{restrained:2, laidback:1}},
+            {letter:"B", text:"理性克制，秩序即是美感", score:{orderly:2}},
+            {letter:"C", text:"感性浪漫，万物皆有诗意", score:{romantic:2}},
+            {letter:"D", text:"思辨先锋，拒绝世俗标准答案", score:{avantgarde:2, sculptural:1}}
+        ]
+    }
+];
+
+// 页面切换
+function switchPage(pageId){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+}
+
+// 密码校验
+function checkPassword(){
+    const inputVal = document.getElementById('pwdInput').value.trim();
+    if(inputVal === PASSWORD){
+        currentQuestion = 0;
+        traitScores = {restrained:0, orderly:0, romantic:0, avantgarde:0, sculptural:0, laidback:0};
+        renderQuestion();
+        switchPage("page-quiz");
+    }else{
+        alert("密码错误，请重新输入");
+    }
+}
+
+//渲染题目
+function renderQuestion(){
+    const q = questions[currentQuestion];
+    document.getElementById("questionText").innerText = q.q;
+    document.getElementById("qNum").innerText = `${currentQuestion+1}/10`;
+    const progress = ((currentQuestion)/10)*100;
+    document.getElementById("progressFill").style.width = `${progress}%`;
+    const optWrap = document.getElementById("optionWrap");
+    optWrap.innerHTML = "";
+    let selected = null;
+    q.o.forEach((opt,idx)=>{
+        const div = document.createElement("div");
+        div.className = "option-item";
+        div.innerHTML = `<span class="opt-letter">${opt.letter}</span><span class="opt-desc">${opt.text}</span>`;
+        div.onclick = ()=>{
+            document.querySelectorAll(".option-item").forEach(item=>item.classList.remove("selected"));
+            div.classList.add("selected");
+            selected = opt;
+            //计分
+            for(let k in opt.score){
+                traitScores[k] += opt.score[k];
+            }
+            document.getElementById("nextBtn").disabled = false;
+        }
+        optWrap.appendChild(div);
+    })
+    document.getElementById("nextBtn").disabled = true;
+}
+
+//下一题
+function goNext(){
+    currentQuestion++;
+    if(currentQuestion >= questions.length){
+        renderResult();
+        switchPage("page-result");
+        return;
+    }
+    renderQuestion();
+}
+
+// 从数组随机选一项
+function randomPick(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+//渲染结果页面
+function renderResult(){
+    // 1. 计算总分，归一化，6项百分比总和严格=100%
+    const totalScore = Object.values(traitScores).reduce((sum,val)=>sum+val,0);
+    const traitPercent = {};
+    if(totalScore === 0){
+        traitPercent.restrained = traitPercent.orderly = traitPercent.romantic = traitPercent.avantgarde = traitPercent.sculptural = traitPercent.laidback = 100/6;
+    }else{
+        for(let key in traitScores){
+            traitPercent[key] = traitScores[key] / totalScore * 100;
+        }
+    }
+
+    // 排序：按分数从高到低，取出TOP3特质
+    const sortedTraits = Object.entries(traitScores).sort((a,b)=>b[1]-a[1]);
+    const top1Key = sortedTraits[0][0];
+    const top2Key = sortedTraits[1][0];
+    const top3Key = sortedTraits[2][0];
+
+    // 主文案使用第一名特质
+    const gene = itemPool[top1Key];
+    document.getElementById("geneSlogan").innerText = gene.slogan;
+    document.getElementById("personDesc").innerText = gene.desc;
+
+    // 6个审美特质进度条
+    let traitHtml = "";
+    traitMeta.forEach(t=>{
+        const pct = traitPercent[t.key];
+        traitHtml += `
+        <div class="trait-row">
+            <div class="trait-top">
+                <span class="trait-name">${t.name}</span>
+                <span class="trait-percent">${pct.toFixed(1)}%</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-fill" style="width:${pct}%"></div>
+            </div>
+        </div>
+        `;
+    })
+    document.getElementById("traitWrap").innerHTML = traitHtml;
+
+    // 分配：包包=TOP1，珠宝=TOP2，腕表=TOP3，香水=TOP1随机
+    const bagItem = randomPick(itemPool[top1Key].bag);
+    const jewelItem = randomPick(itemPool[top2Key].jewel);
+    const watchItem = randomPick(itemPool[top3Key].watch);
+    const perfumeItem = randomPick(itemPool[top1Key].perfume);
+
+    // 4大类推荐模块
+    let recHtml = "";
+    recHtml += `
+        <div class="recommend-block">
+            <div class="recommend-title">👜包包（匹配你的第一审美特质）</div>
+            <div class="recommend-item-name">${bagItem.name}</div>
+            <div class="recommend-item-desc">${bagItem.desc}</div>
+        </div>
+        <div class="recommend-block">
+            <div class="recommend-title">💎珠宝（匹配你的第二审美特质）</div>
+            <div class="recommend-item-name">${jewelItem.name}</div>
+            <div class="recommend-item-desc">${jewelItem.desc}</div>
+        </div>
+        <div class="recommend-block">
+            <div class="recommend-title">⌚腕表（匹配你的第三审美特质）</div>
+            <div class="recommend-item-name">${watchItem.name}</div>
+            <div class="recommend-item-desc">${watchItem.desc}</div>
+        </div>
+        <div class="recommend-block">
+            <div class="recommend-title">🧴香水（匹配你的第一审美特质）</div>
+            <div class="recommend-item-name">${perfumeItem.name}</div>
+            <div class="recommend-item-desc">${perfumeItem.desc}</div>
+        </div>
+    `;
+    document.getElementById("recommendWrap").innerHTML = recHtml;
+}
+</script>
+</body>
+</html>
